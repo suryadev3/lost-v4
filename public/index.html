@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lost & Found Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div id="banner" class="banner hidden"></div>
+
+<!-- AUTH SCREEN -->
+<div id="authScreen" class="auth-wrap">
+  <p class="eyebrow">LOST &amp; FOUND PORTAL</p>
+  <h1>AI-Powered Item Recovery</h1>
+
+  <div class="tabs">
+    <button id="showLogin" class="tab-btn active">Login</button>
+    <button id="showRegister" class="tab-btn">Register</button>
+    <button id="showForgot" class="tab-btn">Forgot Password</button>
+  </div>
+
+  <div id="loginForm" class="auth-form">
+    <input type="email" id="loginEmail" placeholder="Email" />
+    <input type="password" id="loginPassword" placeholder="Password" />
+    <button id="loginBtn" class="primary-btn">Login</button>
+    
+  </div>
+
+  <div id="registerForm" class="auth-form hidden">
+    <input type="text" id="regRegisterNo" placeholder="Register number (e.g. 2401150724)" maxlength="12" />
+    <input type="email" id="regEmail" placeholder="Email" />
+    <input type="password" id="regPassword" placeholder="Password (min 6 characters)" />
+    <button id="registerBtn" class="primary-btn">Create account</button>
+    <p class="hint">Only CHE students. Name & roll no are filled automatically from the class roster.</p>
+  </div>
+
+  <div id="verifyForm" class="auth-form hidden">
+    <p class="form-note">Enter the 6-digit verification code sent to your email (check Spam too)</p>
+    <input type="email" id="verifyEmail" placeholder="Email" readonly />
+    <input type="text" id="verifyCode" placeholder="6-digit code" maxlength="6" inputmode="numeric" />
+    <button id="verifyBtn" class="primary-btn">Verify & Login</button>
+    <button id="resendBtn" class="link-btn">Resend code</button>
+  </div>
+
+  <div id="forgotForm" class="auth-form hidden">
+    <div id="forgotStep1">
+      <p class="form-note">Forgot your password? Enter your email to get a reset code.</p>
+      <input type="email" id="forgotEmail" placeholder="Email" />
+      <button id="sendCodeBtn" class="primary-btn">Send reset code</button>
+    </div>
+    <div id="forgotStep2" class="hidden">
+      <input type="text" id="resetCode" placeholder="Reset code from email" />
+      <input type="password" id="newPassword" placeholder="New password" />
+      <button id="resetBtn" class="primary-btn">Set new password</button>
+    </div>
+  </div>
+
+  <p id="authError" class="error"></p>
+  <p id="authSuccess" class="success"></p>
+</div>
+
+<!-- MAIN APP -->
+<div id="appScreen" class="hidden">
+  <header>
+    <div>
+      <p class="eyebrow-light">LOST &amp; FOUND PORTAL</p>
+      <h2 id="pageTitle">Browse</h2>
+    </div>
+    <div class="header-right">
+      <span id="welcomeMsg"></span>
+      <button id="logoutBtn">Logout</button>
+    </div>
+  </header>
+
+  <nav class="tab-nav">
+    <button class="nav-btn active" data-view="browse">Browse</button>
+    <button class="nav-btn" data-view="mine">My Reports</button>
+    <button class="nav-btn" data-view="profile">Profile</button>
+  </nav>
+
+  <!-- BROWSE VIEW -->
+  <section id="browseView" class="view">
+    <div class="filter-row">
+      <button class="filter-btn active" data-type="">All</button>
+      <button class="filter-btn" data-type="lost">Lost</button>
+      <button class="filter-btn" data-type="found">Found</button>
+    </div>
+    <div id="browseList" class="report-list"></div>
+  </section>
+
+  <!-- MY REPORTS VIEW -->
+  <section id="mineView" class="view hidden">
+    <div id="mineList" class="report-list"></div>
+  </section>
+
+  <!-- PROFILE VIEW -->
+  <section id="profileView" class="view hidden">
+    <div class="profile-card">
+      <div id="avatarInitial" class="avatar"></div>
+      <p id="profileName" class="profile-name"></p>
+      <p id="profileRollNo" class="profile-meta"></p>
+      <p id="profileRegisterNo" class="profile-meta"></p>
+      <p id="profileEmail" class="profile-email"></p>
+      <p id="profileRole" class="profile-role"></p>
+      <button id="showChangeEmailBtn" class="primary-btn" style="margin-top:16px;width:100%">Change email</button>
+      <div id="changeEmailBox" class="hidden" style="margin-top:14px;text-align:left">
+        <input type="email" id="newEmailInput" placeholder="New email address" />
+        <button id="sendChangeEmailBtn" class="primary-btn" style="width:100%;margin-top:8px">Send code to new email</button>
+        <input type="text" id="changeEmailCode" placeholder="6-digit code" maxlength="6" inputmode="numeric" style="margin-top:8px" />
+        <button id="confirmChangeEmailBtn" class="primary-btn" style="width:100%;margin-top:8px">Confirm new email</button>
+        <p id="changeEmailMsg" class="hint" style="margin-top:8px"></p>
+      </div>
+    </div>
+  </section>
+
+  <button id="newReportFab" class="fab">+</button>
+</div>
+
+<!-- NEW REPORT MODAL -->
+<div id="reportFormModal" class="modal hidden">
+  <div class="modal-card">
+    <div class="modal-header">
+      <p class="modal-title">New Report</p>
+      <button id="closeFormBtn" class="close-btn">&times;</button>
+    </div>
+    <div class="type-toggle">
+      <button id="typeLostBtn" class="type-btn type-lost active" data-type="lost">I Lost Something</button>
+      <button id="typeFoundBtn" class="type-btn type-found" data-type="found">I Found Something</button>
+    </div>
+    <select id="reportCategory">
+      <option>Electronics</option>
+      <option>ID Card</option>
+      <option>Bag</option>
+      <option>Bottle</option>
+      <option>Accessories</option>
+      <option>Books</option>
+      <option>Other</option>
+    </select>
+    <input type="text" id="reportTitle" placeholder="Item title (e.g. Black Wildcraft Backpack)" />
+    <textarea id="reportDescription" placeholder="Describe the item — color, brand, marks..." rows="3"></textarea>
+    <input type="text" id="reportLocation" placeholder="Location (e.g. Library, 2nd floor)" />
+    <label class="file-label">
+      📷 Attach a photo (optional — under 2 MB is fastest; max 8 MB)
+      <input type="file" id="reportPhoto" accept="image/*" />
+    </label>
+    <p class="hint" style="margin-top:4px;font-size:12px;opacity:0.75">Large photos work but may take longer to upload on the free server.</p>
+    <p id="formError" class="error"></p>
+    <button id="submitReportBtn" class="primary-btn">Post Report</button>
+  </div>
+</div>
+
+<!-- REPORT DETAIL MODAL -->
+<div id="detailModal" class="modal hidden">
+  <div class="modal-card">
+    <div class="modal-header">
+      <p class="modal-title">Report Details</p>
+      <button id="closeDetailBtn" class="close-btn">&times;</button>
+    </div>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
